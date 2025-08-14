@@ -1,2 +1,2 @@
 import streamlit as st
-st.title("뉴_리더가 되겠다제")
+st.title("*저주받은 비명")
