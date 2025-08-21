@@ -1,5 +1,13 @@
 import streamlit as st
-from hanspell import spell_checker
+import subprocess
+import sys
+
+# py-hanspell 설치 (Streamlit Cloud 등 환경에서도 동작)
+try:
+    from hanspell import spell_checker
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "git+https://github.com/ssut/py-hanspell.git"])
+    from hanspell import spell_checker
 
 def rude_spell_checker(text):
     result = spell_checker.check(text)
@@ -20,13 +28,13 @@ def rude_spell_checker(text):
 # Streamlit 앱 UI
 st.set_page_config(page_title="Rude Spell Checker 📝", page_icon="📝", layout="centered")
 st.title("📝 Rude Spell Checker")
-st.write("입력한 문장을 검사하면 내가 시간 내주지 못할 것도 없지. 😎")
+st.write(" 문장 내놔봐. 내가 시간 못 내줄 것도 없지. 😎")
 
 user_input = st.text_area("뭐라고 쓸 건데? (꺼질거면 아무것도 안 쓰면 됨):", height=100)
 
 if st.button("검사하기"):
     if user_input.strip() == "":
-        st.warning(" 혹시 문장 입력하라는 말이 뭔지 모르냐? 😤")
+        st.warning(" 문장입력. 어렵냐? 😤")
     else:
         feedback = rude_spell_checker(user_input)
         st.markdown(f"### 피드백 결과:")
