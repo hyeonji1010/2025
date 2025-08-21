@@ -1,59 +1,40 @@
 import streamlit as st
-import random
 
-# 히라가나 데이터 (예시)
-hiragana = {
-    "あ": "a", "い": "i", "う": "u", "え": "e", "お": "o",
-    "か": "ka", "き": "ki", "く": "ku", "け": "ke", "こ": "ko",
-    "さ": "sa", "し": "shi", "す": "su", "せ": "se", "そ": "so",
-    "た": "ta", "ち": "chi", "つ": "tsu", "て": "te", "と": "to",
-    "な": "na", "に": "ni", "ぬ": "nu", "ね": "ne", "の": "no",
-    "は": "ha", "ひ": "hi", "ふ": "fu", "へ": "he", "ほ": "ho",
-    "ま": "ma", "み": "mi", "む": "mu", "め": "me", "も": "mo",
-    "や": "ya", "ゆ": "yu", "よ": "yo",
-    "ら": "ra", "り": "ri", "る": "ru", "れ": "re", "ろ": "ro",
-    "わ": "wa", "を": "wo", "ん": "n"
+# MBTI별 직업 추천 데이터 + 이모지
+mbti_jobs = {
+    "INTJ": ["🧠 전략 컨설턴트", "🔬 연구원", "💻 데이터 사이언티스트"],
+    "INTP": ["💻 소프트웨어 개발자", "🔬 연구원", "📊 분석가"],
+    "ENTJ": ["📈 경영자", "🗂️ 프로젝트 매니저", "🚀 기업가"],
+    "ENTP": ["💡 스타트업 창업가", "📢 마케팅 전문가", "🛠️ 발명가"],
+    "INFJ": ["🧑‍🏫 상담사", "✍️ 작가", "🎓 교육자"],
+    "INFP": ["✍️ 작가", "🧠 심리상담사", "🎨 디자이너"],
+    "ENFJ": ["🧑‍🏫 교사", "👥 HR 매니저", "🏆 코치"],
+    "ENFP": ["📢 마케터", "🎭 창작 활동가", "🎉 행사 기획자"],
+    "ISTJ": ["💼 회계사", "⚖️ 변호사", "🏛️ 공무원"],
+    "ISFJ": ["🩺 간호사", "🧑‍🏫 교사", "🤝 사회복지사"],
+    "ESTJ": ["📈 경영자", "🗂️ 프로젝트 매니저", "🎖️ 군인"],
+    "ESFJ": ["🩺 간호사", "🧑‍🏫 교사", "🏛️ 행정가"],
+    "ISTP": ["🛠️ 엔지니어", "✈️ 파일럿", "🔧 기술자"],
+    "ISFP": ["🎨 디자이너", "🎭 예술가", "📸 사진작가"],
+    "ESTP": ["💼 영업사원", "📢 마케터", "💹 트레이더"],
+    "ESFP": ["🎤 연예인", "🎉 이벤트 플래너", "🏨 호스피탈리티 전문가"]
 }
 
-# Streamlit 앱 시작
-st.title("히라가나 암기 퀴즈")
-st.write("히라가나 글자를 보고 올바른 로마자 표기를 선택하세요.")
+# 배경과 제목 꾸미기
+st.markdown(
+    "<h1 style='text-align: center; color: #ff69b4;'>✨ MBTI 직업 추천 🎯</h1>", 
+    unsafe_allow_html=True
+)
+st.markdown(
+    "<p style='text-align: center; font-size:18px;'>당신의 MBTI를 선택하면 어울리는 직업을 추천해드립니다! 💫</p>", 
+    unsafe_allow_html=True
+)
 
-# 세션 상태 초기화
-if "questions" not in st.session_state:
-    st.session_state.questions = random.sample(list(hiragana.items()), 30)
-    st.session_state.index = 0
-    st.session_state.score = 0
+# MBTI 선택
+selected_mbti = st.selectbox("💖 MBTI를 선택하세요:", list(mbti_jobs.keys()))
 
-# 현재 문제
-question, answer = st.session_state.questions[st.session_state.index]
-
-# 선택지 생성 (정답 + 4개 랜덤 오답)
-options = [answer]
-while len(options) < 5:
-    option = random.choice(list(hiragana.values()))
-    if option not in options:
-        options.append(option)
-random.shuffle(options)
-
-# 사용자 선택
-user_answer = st.radio(f"문제 {st.session_state.index + 1} / 30: '{question}'", options)
-
-if st.button("제출"):
-    if user_answer == answer:
-        st.session_state.score += 1
-        st.success("정답!")
-    else:
-        st.error(f"오답! 정답은 '{answer}' 입니다.")
-
-    # 다음 문제
-    st.session_state.index += 1
-    if st.session_state.index >= len(st.session_state.questions):
-        st.write(f"퀴즈 종료! 최종 점수: {st.session_state.score} / 30")
-        # 세션 초기화 옵션
-        if st.button("다시 시작"):
-            st.session_state.questions = random.sample(list(hiragana.items()), 30)
-            st.session_state.index = 0
-            st.session_state.score = 0
-    else:
-        st.experimental_rerun()
+# 추천 직업 표시
+if selected_mbti:
+    st.markdown(f"<h2 style='color: #ff4500;'>🌟 {selected_mbti}에게 어울리는 직업 🌟</h2>", unsafe_allow_html=True)
+    for job in mbti_jobs[selected_mbti]:
+        st.markdown(f"✅ {job}")
