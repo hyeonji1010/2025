@@ -1,2 +1,2 @@
 import streamlit as st
-st.title("Let eat bee")
+st.title("*저주받은 비명")
