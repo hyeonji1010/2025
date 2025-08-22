@@ -2,15 +2,22 @@ import streamlit as st
 import sqlite3
 import hashlib
 import datetime
+import os
+
+DB_FILE = "app.db"
 
 # -----------------------------
-# DB 초기화
+# DB 초기화 (항상 안전하게)
 # -----------------------------
 def init_db():
-    conn = sqlite3.connect("app.db")
+    recreate = False
+    if not os.path.exists(DB_FILE):
+        recreate = True
+
+    conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
-    # 유저 테이블
+    # users 테이블
     c.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +26,7 @@ def init_db():
         )
     """)
 
-    # 개인 일기 테이블
+    # diaries 테이블
     c.execute("""
         CREATE TABLE IF NOT EXISTS diaries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,14 +39,17 @@ def init_db():
     conn.commit()
     conn.close()
 
+    if recreate:
+        st.info("DB가 새로 생성되었습니다!")
+
 # -----------------------------
-# 유틸 함수
+# 유틸
 # -----------------------------
 def hash_pw(pw):
     return hashlib.sha256(pw.encode()).hexdigest()
 
 def get_user(username):
-    conn = sqlite3.connect("app.db")
+    conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("SELECT * FROM users WHERE username=?", (username,))
     user = c.fetchone()
@@ -47,12 +57,12 @@ def get_user(username):
     return user
 
 def get_user_by_id(uid):
-    conn = sqlite3.connect("app.db")
+    conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute("SELECT * FROM users WHERE id=?", (uid,))
-    user = c.fetchone()
+    u = c.fetchone()
     conn.close()
-    return user
+    return u
 
 # -----------------------------
 # 개인 일기 페이지
@@ -64,7 +74,7 @@ def page_personal(user_id):
     content = st.text_area("오늘의 일기 내용")
 
     if st.button("저장"):
-        conn = sqlite3.connect("app.db")
+        conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
         c.execute("SELECT id FROM diaries WHERE user_id=? AND date=?", (user_id, str(date)))
         exists = c.fetchone()
@@ -101,7 +111,7 @@ def login_box():
         if get_user(new_user):
             st.error("이미 존재하는 아이디")
         else:
-            conn = sqlite3.connect("app.db")
+            conn = sqlite3.connect(DB_FILE)
             c = conn.cursor()
             c.execute("INSERT INTO users (username,password) VALUES (?,?)", (new_user, hash_pw(new_pw)))
             conn.commit()
@@ -113,6 +123,8 @@ def login_box():
 # -----------------------------
 def main():
     st.title("📓 개인 일기장")
+
+    init_db()
 
     if "user" not in st.session_state:
         login_box()
@@ -129,5 +141,4 @@ def main():
         st.rerun()
 
 if __name__ == "__main__":
-    init_db()
     main()
