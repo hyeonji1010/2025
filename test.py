@@ -7,13 +7,9 @@ import os
 DB_FILE = "app.db"
 
 # -----------------------------
-# DB 초기화 (항상 안전하게)
+# DB 초기화
 # -----------------------------
 def init_db():
-    recreate = False
-    if not os.path.exists(DB_FILE):
-        recreate = True
-
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
 
@@ -38,9 +34,6 @@ def init_db():
 
     conn.commit()
     conn.close()
-
-    if recreate:
-        st.info("DB가 새로 생성되었습니다!")
 
 # -----------------------------
 # 유틸
@@ -87,12 +80,12 @@ def page_personal(user_id):
         st.success("저장 완료!")
 
 # -----------------------------
-# 로그인 / 회원가입
+# 로그인 페이지
 # -----------------------------
-def login_box():
+def login_page():
     st.subheader("🔑 로그인")
-    username = st.text_input("아이디")
-    password = st.text_input("비밀번호", type="password")
+    username = st.text_input("아이디", key="login_user")
+    password = st.text_input("비밀번호", type="password", key="login_pw")
 
     if st.button("로그인"):
         user = get_user(username)
@@ -103,10 +96,14 @@ def login_box():
         else:
             st.error("로그인 실패")
 
-    st.divider()
+# -----------------------------
+# 회원가입 페이지
+# -----------------------------
+def signup_page():
     st.subheader("📝 회원가입")
-    new_user = st.text_input("새 아이디")
-    new_pw = st.text_input("새 비밀번호", type="password")
+    new_user = st.text_input("새 아이디", key="signup_user")
+    new_pw = st.text_input("새 비밀번호", type="password", key="signup_pw")
+
     if st.button("회원가입"):
         if get_user(new_user):
             st.error("이미 존재하는 아이디")
@@ -127,7 +124,11 @@ def main():
     init_db()
 
     if "user" not in st.session_state:
-        login_box()
+        tab1, tab2 = st.tabs(["로그인", "회원가입"])
+        with tab1:
+            login_page()
+        with tab2:
+            signup_page()
         return
 
     user = st.session_state["user"]
