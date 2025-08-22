@@ -12,7 +12,7 @@ if os.path.exists(FILE):
 else:
     data = {}
 
-st.title("📔 개인 일기장 (아이디 기반)")
+st.title("📔 개인 일기장 (아이디 기반, 여러 일기 저장 가능)")
 
 # 아이디 입력
 user_id = st.text_input("아이디를 입력하세요", key="user_id")
@@ -25,19 +25,25 @@ if user_id:
     date = st.date_input("날짜", datetime.date.today())
     date_str = str(date)
 
-    # 이전 내용 불러오기
-    content = data[user_id].get(date_str, "")
-    text = st.text_area("오늘의 일기 내용", value=content, height=300)
+    if date_str not in data[user_id]:
+        data[user_id][date_str] = []
 
-    if st.button("저장"):
-        data[user_id][date_str] = text
-        with open(FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        st.success(f"{user_id} 님의 일기가 저장되었습니다!")
+    # 오늘 일기 작성
+    text = st.text_area("오늘의 일기 내용", height=150)
+
+    if st.button("일기 추가"):
+        if text.strip():
+            data[user_id][date_str].append(text)
+            with open(FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            st.success("일기가 추가되었습니다!")
+        else:
+            st.warning("내용을 입력하세요.")
 
     # 저장된 일기 확인
-    st.subheader(f"📖 {user_id} 님의 기존 일기")
-    for d, c in sorted(data[user_id].items(), reverse=True):
+    st.subheader(f"📖 {user_id} 님의 일기 목록")
+    for d, entries in sorted(data[user_id].items(), reverse=True):
         st.write(f"📅 {d}")
-        st.write(c)
+        for i, entry in enumerate(entries, 1):
+            st.write(f"{i}. {entry}")
         st.divider()
