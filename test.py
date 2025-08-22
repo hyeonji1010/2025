@@ -17,7 +17,7 @@ st.title("📔 개인 일기장 (아이디 기반, 여러 일기 저장 가능)"
 # 아이디 입력
 user_id = st.text_input("아이디를 입력하세요", key="user_id")
 
-if user_id:
+if user_id.strip():  # 아이디가 비어있지 않을 때만 처리
     if user_id not in data:
         data[user_id] = {}
 
@@ -32,7 +32,7 @@ if user_id:
     text = st.text_area("오늘의 일기 내용", height=150)
 
     if st.button("일기 추가"):
-        if text.strip():
+        if text.strip():  # 내용이 비어있지 않은지 체크
             data[user_id][date_str].append(text)
             with open(FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
@@ -47,3 +47,5 @@ if user_id:
         for i, entry in enumerate(entries, 1):
             st.write(f"{i}. {entry}")
         st.divider()
+else:
+    st.info("먼저 아이디를 입력해주세요.")
