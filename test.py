@@ -12,7 +12,7 @@ if os.path.exists(FILE):
 else:
     data = {}
 
-st.title("📔 개인 일기장 (제목 + 내용, 아이디 기반)")
+st.title("📔 두근두근 비밀 일기 ❤️")
 
 # 아이디 입력
 user_id = st.text_input("아이디를 입력하세요", key="user_id")
@@ -29,20 +29,20 @@ if user_id.strip():
         data[user_id][date_str] = []
 
     # 새 일기 작성
-    title = st.text_input("일기 제목", key="title_input")
-    content = st.text_area("오늘의 일기 내용", height=150)
+    title = st.text_input("제목", key="title_input")
+    content = st.text_area("나는 오늘... ", height=150)
 
-    if st.button("일기 추가"):
+    if st.button("페이지 추가"):
         if title.strip() and content.strip():
             data[user_id][date_str].append({"title": title, "content": content})
             with open(FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
-            st.success("일기가 추가되었습니다!")
+            st.success("하루가 기록되었습니다!")
         else:
             st.warning("제목과 내용을 모두 입력해주세요.")
 
     # 저장된 일기 확인 (Expander)
-    st.subheader(f"📖 {user_id} 님의 일기 목록")
+    st.subheader(f"📖 {user_id} 의 일기 목록")
     for d, entries in sorted(data[user_id].items(), reverse=True):
         st.write(f"📅 {d}")
         for entry in entries:
