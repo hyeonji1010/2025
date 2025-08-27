@@ -21,9 +21,16 @@ st.markdown("""
         font-family: 'Nanum Pen Script', cursive;
     }
 
+    /* 배경 - 줄노트 */
     body {
-        background-color: #fffafc;
+        background: repeating-linear-gradient(
+            to bottom,
+            #fffafc,
+            #fffafc 28px,
+            #ffeef4 29px
+        );
     }
+
     .title {
         font-size: 48px;
         font-weight: bold;
@@ -37,18 +44,36 @@ st.markdown("""
         text-align: center;
         margin-bottom: 30px;
     }
+
+    /* 일기 카드 (포스트잇 스타일) */
     .diary-card {
-        background-color: #ffffff;
+        background-color: #fffdf6;
         border: 2px solid #ffd6e0;
-        border-radius: 15px;
+        border-radius: 12px;
         padding: 20px;
         margin-bottom: 15px;
-        box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
+        box-shadow: 4px 4px 10px rgba(0,0,0,0.08);
         font-size: 22px;
+        line-height: 1.6;
     }
+
     textarea, input {
         font-family: 'Nanum Pen Script', cursive !important;
         font-size: 20px !important;
+        background-color: #fffdf6 !important;
+        border: 2px solid #ffd6e0 !important;
+        border-radius: 8px !important;
+        padding: 6px 10px !important;
+    }
+
+    .stButton button {
+        font-family: 'Nanum Pen Script', cursive !important;
+        font-size: 22px !important;
+        background-color: #ffb6c1 !important;
+        color: white !important;
+        border-radius: 10px !important;
+        border: none !important;
+        padding: 6px 16px !important;
     }
     </style>
 """, unsafe_allow_html=True)
