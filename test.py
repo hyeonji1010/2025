@@ -12,30 +12,43 @@ if os.path.exists(FILE):
 else:
     data = {}
 
-# 스타일 추가
+# 스타일 + 구글 폰트 적용
 st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Nanum Pen Script', cursive;
+    }
+
     body {
         background-color: #fffafc;
     }
     .title {
-        font-size: 40px;
+        font-size: 48px;
         font-weight: bold;
         color: #ff4d6d;
         text-align: center;
+        margin-bottom: -10px;
     }
     .subtitle {
-        font-size: 20px;
+        font-size: 24px;
         color: #555;
         text-align: center;
+        margin-bottom: 30px;
     }
     .diary-card {
         background-color: #ffffff;
         border: 2px solid #ffd6e0;
         border-radius: 15px;
-        padding: 15px;
+        padding: 20px;
         margin-bottom: 15px;
-        box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
+        font-size: 22px;
+    }
+    textarea, input {
+        font-family: 'Nanum Pen Script', cursive !important;
+        font-size: 20px !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -45,10 +58,10 @@ st.warning("⚠️ 아이디는 곧 일기 저장/불러오기 키입니다. 아
 
 # 제목 꾸미기
 st.markdown("<div class='title'>📔 두근두근 비밀 일기 ❤️</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>비밀스런 하루를 기록해보세요 ✨</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>소중한 하루를 기록해보세요 ✨</div>", unsafe_allow_html=True)
 
 # 아이디 입력
-user_id = st.text_input("아이디를 입력하세요", key="user_id")
+user_id = st.text_input("✨ 아이디를 입력하세요", key="user_id")
 
 if user_id.strip():
     if user_id not in data:
@@ -83,4 +96,4 @@ if user_id.strip():
                 st.markdown(f"<div class='diary-card'>{entry['content']}</div>", unsafe_allow_html=True)
         st.divider()
 else:
-    st.info("먼저 아이디를 입력해주세요")
+    st.info("먼저 아이디를 입력해주세요 🌙")
