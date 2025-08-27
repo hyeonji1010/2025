@@ -45,10 +45,10 @@ st.warning("⚠️ 아이디는 곧 일기 저장/불러오기 키입니다. 아
 
 # 제목 꾸미기
 st.markdown("<div class='title'>📔 두근두근 비밀 일기 ❤️</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>소중한 하루를 기록해보세요 ✨</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>비밀스런 하루를 기록해보세요 ✨</div>", unsafe_allow_html=True)
 
 # 아이디 입력
-user_id = st.text_input("✨ 아이디를 입력하세요", key="user_id")
+user_id = st.text_input("아이디를 입력하세요", key="user_id")
 
 if user_id.strip():
     if user_id not in data:
@@ -83,4 +83,4 @@ if user_id.strip():
                 st.markdown(f"<div class='diary-card'>{entry['content']}</div>", unsafe_allow_html=True)
         st.divider()
 else:
-    st.info("먼저 아이디를 입력해주세요 🌙")
+    st.info("먼저 아이디를 입력해주세요")
