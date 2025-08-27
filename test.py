@@ -11,6 +11,7 @@ if os.path.exists(FILE):
         data = json.load(f)
 else:
     data = {}
+st.warning("⚠️ 아이디는 곧 일기 저장/불러오기 키입니다. 아이디를 잊으면 저장된 일기를 찾을 수 없으니 꼭 기억하세요!")
 
 st.title("📔 두근두근 비밀 일기 ❤️")
 
